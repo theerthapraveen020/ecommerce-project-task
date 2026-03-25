@@ -14,7 +14,7 @@ app.get("/products", async (req, res) => {
     );
 
     if (!response.ok) {
-      throw new Error("Failed to fetch");
+      throw new Error("Failed to fetch products");
     }
 
     const data = await response.json();
@@ -22,14 +22,16 @@ app.get("/products", async (req, res) => {
     res.json(data);
 
   } catch (error) {
-    console.error(error);
+    console.error("Fetch error:", error);
+
     res.status(500).json({
-      message: "Error fetching products"
+      message: "Error fetching products",
+      error: error.message
     });
   }
 });
 
-// Simple cart (local memory)
+// Simple cart
 let cart = [];
 
 app.post("/cart", (req, res) => {
@@ -41,6 +43,9 @@ app.post("/cart", (req, res) => {
   });
 });
 
-app.listen(5000, () => {
-  console.log("Server running on port 5000");
+// IMPORTANT: use Render port
+const PORT = process.env.PORT || 5000;
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
