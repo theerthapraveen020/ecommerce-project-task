@@ -1,6 +1,5 @@
 const express = require("express");
 const cors = require("cors");
-const fetch = require("node-fetch");
 
 const app = express();
 
@@ -14,11 +13,16 @@ app.get("/products", async (req, res) => {
       "https://fakestoreapi.com/products"
     );
 
+    if (!response.ok) {
+      throw new Error("Failed to fetch");
+    }
+
     const data = await response.json();
 
     res.json(data);
 
   } catch (error) {
+    console.error(error);
     res.status(500).json({
       message: "Error fetching products"
     });
@@ -26,18 +30,15 @@ app.get("/products", async (req, res) => {
 });
 
 // Simple cart (local memory)
-
 let cart = [];
 
 app.post("/cart", (req, res) => {
-
   cart.push(req.body);
 
   res.json({
     message: "Added to cart",
     cart
   });
-
 });
 
 app.listen(5000, () => {
