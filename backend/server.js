@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+const axios = require("axios");
 
 const app = express();
 
@@ -9,20 +10,14 @@ app.use(express.json());
 // GET products from Fake Store API
 app.get("/products", async (req, res) => {
   try {
-    const response = await fetch(
+    const response = await axios.get(
       "https://fakestoreapi.com/products"
     );
 
-    if (!response.ok) {
-      throw new Error("Failed to fetch products");
-    }
-
-    const data = await response.json();
-
-    res.json(data);
+    res.json(response.data);
 
   } catch (error) {
-    console.error("Fetch error:", error);
+    console.error("Axios error:", error.message);
 
     res.status(500).json({
       message: "Error fetching products",
@@ -43,7 +38,7 @@ app.post("/cart", (req, res) => {
   });
 });
 
-// IMPORTANT: use Render port
+// IMPORTANT for Render
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
